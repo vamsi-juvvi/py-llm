@@ -80,23 +80,38 @@ class ColabEnv:
      
 
 #--------------------------------------------------------------
+from enum import StrEnum
+class TextAlign (StrEnum):
+    DEFAULT = "justify"
+    RIGHT = "right"
+    LEFT = "left"
+
 class DisplayHTML:
-     """
-     Collection of jupyter visualization methods
-     """
-     @staticmethod
-     # Enhance with more Html (fg-color, font, etc) as needed but title is usually a good starting point.
-     def color_box(txt, title=None):
-          if title is not None:
-               txt = f"<b>{title}</b><br><hr><br>{txt}"
+    """
+    Collection of jupyter visualization methods
+    """
+    @staticmethod
+    def color_box(txt, title=None, bg="pink", fg="black", align= TextAlign.DEFAULT):
+        if title is not None:
+            txt = f"<b>{title}</b><br><hr><br>{txt}"
 
-          display(HTML(f"<div style='border-radius:15px;padding:15px;background-color:pink;color:black;'>{txt}</div>"))
-     
-     def text(txt,bg:str=None, fg:str=None):
+        MARGIN_AMOUNT="100px"
+        match align:
+            case TextAlign.LEFT:        
+                margin = f"margin-right:{MARGIN_AMOUNT};"
+            case TextAlign.RIGHT:
+                margin = f"margin-left:{MARGIN_AMOUNT};"
+            case _:
+                margin = ""
+
+        display(HTML(f"<div style='border-radius:15px;padding:15px;{margin}text-align:{str(align)};background-color:{bg};color:{fg};'>{txt}</div>"))    
+    
+    @staticmethod
+    def text(txt, bg=None, fg=None, align=None):
          bg = f"background-color:{bg}" if bg else ''
-         bg = f"color:{fg}" if fg else ''
-         display(HTML(f"<span style='{bg};{fg};'>{txt}</span>"))
-
+         fg = f"color:{fg}" if fg else ''
+         align = f"text-align:{align}" if align else ''
+         display(HTML(f"<p style='{bg};{fg};{align};'>{txt}</p>"))
 
 #--------------------------------------------------------------
 class DisplayMarkdown:
