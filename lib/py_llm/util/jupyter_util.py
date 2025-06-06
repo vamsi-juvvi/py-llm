@@ -53,10 +53,10 @@ class ColabEnv:
           from google.colab import userdata
           logging.debug(f"Trying to fetch {key} from your secrets. Remember to make it available to this notebook")            
      
-     if keyval := userdata.get(key):
-          logging.debug(f"Found colab secret for {key}")
-     else:
-          logging.warning(f"Did not find colab secret for {key}")
+          if keyval := userdata.get(key):
+               logging.debug(f"Found colab secret for {key}")
+          else:
+               logging.warning(f"Did not find colab secret for {key}")
      
      return keyval
 
