@@ -7,24 +7,24 @@ from py_llm.util.jupyter_util import ColabEnv
 openai.api_key = ColabEnv.colab_keyval_or_env("OPENAI_API_KEY")
 
 #-------------------------------------------------------------------------------------
-def get_completion(prompt, model="gpt-4o-mini", temperature=0) -> str:
+def get_completion(prompt, tools, model="gpt-4o-mini", temperature=0) -> str:
     """
     Returns the one-shot completion of a simple prompt (no tools)
     as a string response.
     """
     chat_history = [{"role":"user", "content":prompt}]
-    response = get_response(chat_history, model, temperature)    
+    response = get_response(chat_history, tools, model, temperature)    
     return response.choices[0].message.content
 
 #-------------------------------------------------------------------------------------
-def get_response(chat_history, model="gpt-4o-mini", temperature=0):
+def get_response(chat_history, tools, model="gpt-4o-mini", temperature=0):
     """
     Returns the completion given a chat_history
     """    
     return openai.chat.completions.create(
         model=model,
         messages=chat_history,
-        tools=None,
+        tools=tools,
         temperature=temperature)
 
 #-------------------------------------------------------------------------------------
