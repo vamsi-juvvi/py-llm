@@ -61,7 +61,13 @@ class Tool:
 
         # lambda to call function with deserialized arg (if any) 
         # or empty arg-list
-        self.tool_func             = _items[2]        
+        self.tool_func             = _items[2]
+
+        # Tool schema suitable for in-prompt use (less verboce 
+        # than full schema)
+        # Type: InPromptToolSchema, not JSON
+        self.in_prompt_schema      = Tool.build_inprompt_tool_schema(self.tool_schema)        
+        logging.debug(f"Tool : {tool_fn.__name__}, InPromptSchema=\n{self.in_prompt_schema}\n")
     
     def exec(self, json_arg: str) -> str:
         if self.tool_arg_deserializer:
@@ -322,4 +328,8 @@ class ToolCollection:
     
     def get_schemas(self, mapper=None) :
         mapper = mapper if mapper else lambda x: x
-        return [mapper(tool.tool_schema) for tool in self.tool_dict.values()]    
+        return [mapper(tool.tool_schema) for tool in self.tool_dict.values()]
+    
+    def get_inprompt_schemas(self, mapper=None) :
+        mapper = mapper if mapper else lambda x: x
+        return [mapper(tool.in_prompt_schema) for tool in self.tool_dict.values()]        
